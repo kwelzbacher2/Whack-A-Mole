@@ -1,0 +1,116 @@
+<!-- 
+		Name: Katherine Welzbacher
+		Date: 8/2/17
+		Class: CSCI2447, Javascript Fundamentals
+		Project 7
+ -->
+
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <title>Whack-A-Mole (CSCI2447)</title>
+    
+    <!-- CSS styles: This is for me to worry about; not you. -->
+	<link href="css/game.css" rel="stylesheet" />
+    <script src = "js/jquery-3.2.1.js"></script>
+    <script>
+        var score = 0;
+        var seconds = 30;
+        var t;
+        var timer;
+        var count = 0;
+        var countRemove = 0;
+        
+        $(document).ready(function() {
+            $("#start_button").click(function(){
+                $(this).attr('disabled', true);
+                start();
+                $("#gamespace").css("background","blue");
+                $("h1").css("color", "green");
+                $(document).on("click", ".img", function(){
+                    addScore();
+                    $(this).remove();
+                });
+            });
+        });
+        function yPosition(){
+            return Math.floor(Math.random()*300 + 1);
+        }
+        function xPosition(){
+            return Math.floor(Math.random()*480 +1);
+        }
+        function addScore() {
+            score += 1;
+            $("#score").text(score + " pts");
+        }
+        function minusSeconds() {
+            clearTimeout(t);
+            $("#timer").text(seconds + " seconds left");
+            t = setTimeout("minusSeconds()", 1000);
+            if(seconds > 0){
+            seconds -= 1;
+            } else {
+                setTimeout("endGame()", 1000);
+                $('img').css('visibility','hidden');
+                $('#timer').html("GAME OVER");
+            }
+        }
+        function endGame() {
+        if(alert("GAME OVER! Score: " + score)) {}
+            else {window.location.reload();}
+        }
+        function start() {
+            $("#timer").show();
+            minusSeconds();
+            addMole();
+        }
+        function addMole() {
+            var yPos = yPosition();
+            var xPos = xPosition();
+            if(seconds >0){
+                clearTimeout(timer);
+                $("#gamespace").append('<img src="img/mole.png" class= "img" id="m'+count+'" style=" top: '+yPos+'px; left: '+xPos+'px;" />');
+                count++;
+                timer = setTimeout("addMole()", randomTime());
+                rTime = setTimeout("removeMole()",randomTime());
+            }
+                
+        }
+        
+        function randomTime() {
+            return Math.floor(Math.random()*2000 + 1);
+        }
+        function removeMole() {
+            clearTimeout(rTime);
+            $('#m'+countRemove).remove();
+            countRemove++;
+        }
+    </script>
+      
+  </head>
+  <body>
+
+	<div id="content">
+
+		<h1>Whack-A-Mole</h1>
+		
+		<p>After clicking "start", you will have 30 seconds to click
+		as many moles as you can. The moles appear randomly so be ready! </p>
+		
+		<div id="controls">
+			<span id="score">0 pts</span>
+			<button type="button" id="start_button">Start!</button>
+		</div>
+		
+		<div id="timer">30 seconds left</div>
+		
+		<div id="gamespace">
+
+			
+			
+		</div>
+		
+	</div>
+  </body>
+</html>
